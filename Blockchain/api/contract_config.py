@@ -1,5 +1,7 @@
 import json
 from web3 import Web3
+import pymongo
+
 chain_url = "HTTP://127.0.0.1:8545"
 web3 = Web3(Web3.HTTPProvider(chain_url))
 
@@ -7,3 +9,7 @@ abi = json.loads('[{"inputs":[],"stateMutability":"nonpayable","type":"construct
 
 address = web3.toChecksumAddress("0x396ddf784936d76b1c81e495da194742458651c6")
 contract = web3.eth.contract(address=address, abi=abi)
+
+client = pymongo.MongoClient("mongodb+srv://ayushChutiya:chutiya123@cluster0.kacjq.mongodb.net/myFirstDatabase?retryWrites=true&w=majority")
+db = client["myFirstDatabase"]
+collection = db["users"]
