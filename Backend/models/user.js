@@ -17,7 +17,10 @@ const userSchema = new mongoose.Schema({
     password : {
         type:String,
         require:true
-    }
+    },
+    voterID : {
+        type:String,
+        }
 })
 
 const User = new mongoose.model("User",userSchema);

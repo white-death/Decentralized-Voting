@@ -73,4 +73,25 @@ const login = async (req,res,next) => {
 
 }
 
-module.exports = {login,register};
+const verifyVoter = async (req,res,next) => {
+        let email = req.body.email;
+        let voterID = req.body.voterId;
+
+        const filter = {email:email};
+        const updateVal = {voterID: voterID}
+
+        User.findOneAndUpdate(filter,updateVal).then(res=> {
+            console.log(res)
+            if(res!==null){
+                res.status(200).json({
+                    message: `voter id ${voterID} registered`
+                })
+            }
+        }).catch(err=> {
+            console.log(err)
+            res.status(404).json({
+                message: 'No user found'
+            })
+        })
+}
+module.exports = {login,register,verifyVoter};

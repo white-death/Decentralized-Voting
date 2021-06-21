@@ -35,7 +35,8 @@ app.listen(port, () => {
         `mongodb+srv://${DB_USERNAME}:${DB_PASSWORD}@cluster0.kacjq.mongodb.net/${DB_NAME}?retryWrites=true&w=majority`, {
         useNewUrlParser:true,
         useUnifiedTopology:true,
-        useCreateIndex:true
+        useCreateIndex:true,
+        useFindAndModify:false
     }) // .then use hota hai ki connect hone k baad kya kare voh handle karne k liye
     .then(()=> {
         console.log(`conn db success `);
