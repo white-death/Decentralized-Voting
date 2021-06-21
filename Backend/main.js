@@ -1,6 +1,8 @@
 const express = require("express");
 
 const mong = require("mongoose");
+var cors = require('cors')
+
 require('dotenv').config();
 const app = express();
 // '/users' pe aa rahi sari request ko userRouter ko bhej dete hai
@@ -18,7 +20,7 @@ const DB_USERNAME = process.env.DB_USERNAME
 const DB_PASSWORD = process.env.DB_PASSWORD
 const DB_NAME = process.env.DB_NAME
 
-
+app.use(cors())
 // .use har type ki request (matlab ki GET, POST etc etc) ko leke us URL k anusar
 // us object ko bhej deta hai jo URL k side me likha hai
 app.use('/users', userRouter );
@@ -30,7 +32,7 @@ app.listen(port, () => {
     // mongoose ko object me store karke (yaha pe mong hai naam) 
     // .connect me us database ka url or us url me password and DB ka name bhejte hai
     mong.connect(
-        `mongodb+srv://${DB_USERNAME}:${DB_PASSWORD}@cluster0.w5wsj.mongodb.net/${DB_NAME}?retryWrites=true&w=majority`, {
+        `mongodb+srv://${DB_USERNAME}:${DB_PASSWORD}@cluster0.kacjq.mongodb.net/${DB_NAME}?retryWrites=true&w=majority`, {
         useNewUrlParser:true,
         useUnifiedTopology:true,
         useCreateIndex:true

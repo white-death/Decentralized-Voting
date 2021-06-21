@@ -4,7 +4,7 @@ const jwt    = require('jsonwebtoken')
 
 
 const register = (req, res, next) => {
-    bcrypt.hash(req.body.password, 10, function(err, hashedPass){
+    bcrypt.hash(req.body.Password, 10, function(err, hashedPass){
         if(err){
             res.json({
                 error:err
@@ -12,9 +12,9 @@ const register = (req, res, next) => {
         }
 
         let user = new User ({
-            name : req.body.name,
-            email : req.body.email,
-            phone : req.body.phone,
+            name : req.body.Name,
+            email : req.body.Email,
+            phone : req.body.PhoneNumber,
             password : hashedPass
         })
         user.save()
@@ -36,8 +36,8 @@ const register = (req, res, next) => {
 
 const login = async (req,res,next) => {
     //console.log("and here")
-    var username = req.body.username
-    var password= req.body.password
+    var username = req.body.Username
+    var password= req.body.Password
     console.log(username,password)
 
 
@@ -54,17 +54,18 @@ const login = async (req,res,next) => {
                     let token = jwt.sign({name:user.name},'verySecretValue', {expiresIn:'1h'})
                     res.json({
                         message: 'Login Successful',
-                        token
+                        token,
+                        user
                       
                     })
                 }else{
-                    res.json({
+                    res.status(403).json({
                         message: 'password does not matched'
                     })
                 }
             })
         }else{
-            res.json({
+            res.status(404).json({
                 message: 'No user found'
             })
         }

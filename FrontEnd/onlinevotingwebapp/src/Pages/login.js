@@ -1,4 +1,5 @@
 import React from 'react';
+import {withRouter} from 'react-router-dom'
 import { Avatar, Grid, Link, Paper, TextField, Typography } from '@material-ui/core'
 import LockIcon from '@material-ui/icons/Lock';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
@@ -6,11 +7,15 @@ import Button from '@material-ui/core/Button';
 import SendIcon from '@material-ui/icons/Send';
 import Checkbox from '@material-ui/core/Checkbox';
 import { Formik, Form, Field, ErrorMessage } from 'formik'
+import AlertMessage  from '../Component/notification';
+
 import * as Yup from 'yup'
+import userApi from '../Api/userApi'
 import '../Containers/index.css';
 
-    const LoginPage=({ handleChange})=>{
-    
+
+const LoginPage = (props) => {
+
 
     const initialValues = {
         Username: '',
@@ -18,12 +23,30 @@ import '../Containers/index.css';
         remember: false
 
     }
-    const onSubmit = (values, props) => {
+
+    const [isLoading, setLoading] = React.useState(false)
+    const [loginStatus, setLoginStatus] = React.useState("")
+    const onSubmit = (values) => {
         console.log(values)
-        setTimeout(() => {
-            props.resetForm()
-            props.setSubmitting(false)
-        }, 1500)
+        setLoading(true)
+        userApi.login(values).then(
+            res => {
+                console.log(res.data)
+                setLoading(false);
+                props.history.push("/")
+            }
+        ).catch(err => {
+            // console.log(err.response.data.message)
+            setLoading(false);
+            return setLoginStatus({ msg: err.response.data.message, key: Math.random(), status:"error"})
+            // console.log(err)
+
+        }
+        )
+        // setTimeout(() => {
+        //     props.resetForm()
+        //     props.setSubmitting(false)
+        // }, 1500)
         console.log(props)
     }
 
@@ -32,14 +55,14 @@ import '../Containers/index.css';
         Password: Yup.string()
             .required('No password provided!')
             .min(8, 'Password is too short - should be 8 chars minimum.')
-            .matches(/[a-zA-Z]/, 'Password can only contain Latin letters.')
+            .matches(/[a-zA-Z0-9]/, 'Password can only contain Latin letters.')
     })
 
 
 
 
     return (
-        <Paper elevation={10} className = "logpage">
+        <Paper elevation={10} className="logpage">
 
             <Grid align='center'>
                 <Avatar><LockIcon /></Avatar>
@@ -65,12 +88,13 @@ import '../Containers/index.css';
                             control={
                                 <Checkbox color="primary" />
                             }
-                            label="Remember me"/>
+                            label="Remember me" />
 
                         <Grid className="button">
-                            <Button type='submit' variant="contained" color="primary" fullWidth endIcon={<SendIcon />} disabled={props.isSubmitting}>
-                                {props.isSubmitting ? "Loading..." : "Sign in"}
+                            <Button type='submit' variant="contained" color="primary" fullWidth endIcon={<SendIcon />} >
+                                {isLoading ? "Loading..." : "Sign in"}
                             </Button>
+                        {loginStatus ? <AlertMessage key={loginStatus.key} message={loginStatus.msg} status={loginStatus.status} /> : null}
 
                         </Grid>
                     </Form>
@@ -81,15 +105,16 @@ import '../Containers/index.css';
             <Typography>
                 <Link href="#">
                     Forgot password?
-                    </Link>
+                </Link>
             </Typography>
             <Typography> Do you have an account?
-                    <Link href="#" onClick={()=> handleChange("event",1)}>
+                <Link href="#" onClick={() => props.handleChange("event", 1)}>
                     &nbsp; Sign Up?
-                    </Link>
+                </Link>
             </Typography>
-            </Paper>
+        </Paper>
+
     );
 
 }
-export default LoginPage
+export default withRouter(LoginPage)
