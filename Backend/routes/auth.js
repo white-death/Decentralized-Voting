@@ -8,6 +8,7 @@ authRouter.post('/register',AuthController.register)
 
 //authRouter.post('/login', (req,res)=> AuthController.login(req,res))
 authRouter.post('/login', AuthController.login)
+authRouter.post('/verify', AuthController.verifyVoter)
 
 module.exports = authRouter
 
