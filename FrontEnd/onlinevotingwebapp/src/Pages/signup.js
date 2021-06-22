@@ -1,4 +1,5 @@
 import React from 'react';
+import {withRouter} from 'react-router-dom'
 import { Avatar, FormControlLabel, Grid, Paper, TextField, Typography } from '@material-ui/core'
 import AddCircleOutlineIcon from '@material-ui/icons/AddCircleOutline';
 import Button from '@material-ui/core/Button';
@@ -6,11 +7,12 @@ import SendIcon from '@material-ui/icons/Send';
 import Checkbox from '@material-ui/core/Checkbox';
 import { Formik, Form, Field, ErrorMessage } from 'formik'
 import * as Yup from 'yup'
+import userApi from '../Api/userApi'
 import { FormHelperText } from '@material-ui/core';
 import '../Containers/index.css';
 
 
-const SignupPage = () => {
+const SignupPage = (props) => {
 
     const initialValues = {
         Name: '',
@@ -22,15 +24,29 @@ const SignupPage = () => {
 
     }
 
-    const onSubmit = (values, props) => {
+    const [isLoading, setLoading] = React.useState(false)
+    const onSubmit = (values) => {
         console.log(values)
-        setTimeout(() => {
-            props.resetForm()
-            props.setSubmitting(false)
-        }, 1500)
-        console.log(props)
+        setLoading(true)
+        userApi.register(values).then(
+            res => {
+                console.log(res.data)
+                setLoading(false);
+                props.history.push("/")
+            }
+        ).catch(err => {
+            setLoading(false);
+            console.log(err)
 
+        }
+        )
+        // setTimeout(() => {
+        //     props.resetForm()
+        //     props.setSubmitting(false)
+        // }, 1500)
+        console.log(props)
     }
+
 
     const validationSchema = Yup.object().shape({
         Name: Yup.string().min(3, "It's too short").required("Required"),
@@ -84,10 +100,9 @@ const SignupPage = () => {
                         <Button
                             type='submit'
                             variant="contained"
-                            disabled={props.isSubmitting}
                             color="primary" fullWidth
                             endIcon={<SendIcon />}>
-                            {props.isSubmitting ? "Loading..." : "Sign up"}
+                            {isLoading ? "Loading..." : "Sign up"}
                         </Button>
                     </Form>
                 )}
@@ -98,4 +113,4 @@ const SignupPage = () => {
 
 }
 
-export default SignupPage
+export default withRouter(SignupPage)

@@ -13,7 +13,7 @@ def voting(tx_from: str, vote_to: int):
     Gets Transaction Details
 
     Returns:
-        [Hash]: [Transaction Generated]
+        [Hash]: [Transaction Generated] and updates the database.
     """
     tx_hash, tx_receipt, tx_block = vote(tx_from, vote_to)
     print ("last txn : {}".format(tx_hash))
@@ -22,9 +22,10 @@ def voting(tx_from: str, vote_to: int):
 
 @app.get('/address')
 def address(govID: str):
-    """Returns a new Wallet Address with transaction details.
+    """Returns a new Wallet Address with transaction details and updates the Database.
     """    
     address, tx_hash, tx_receipt = adr(govID)
+
     return {"newWalletAddress":address, "newHash":tx_hash}
 
 

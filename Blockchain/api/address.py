@@ -1,4 +1,4 @@
-from contract_config import contract, web3
+from contract_config import contract, web3, collection
 
 
 def adr(govID):
@@ -9,6 +9,8 @@ def adr(govID):
     tx = contract.functions.addUser(govID, address).transact()
     tx_hash = (web3.toHex(tx))
     tx_receipt = (web3.eth.waitForTransactionReceipt(tx_hash))  
+    collection.update_one({ "voterID": govID }, { "$set": { "walletAddress": address } })
+    collection.update_one({ "voterID": govID }, { "$set": { "verificationHash": tx_hash } })
     print ("New wallet called: {}".format(address))
     
     return address,tx_hash, tx_receipt
