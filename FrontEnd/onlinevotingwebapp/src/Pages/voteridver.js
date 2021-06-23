@@ -3,13 +3,27 @@ import React, { useRef, useEffect, useState } from 'react';
 import * as tf from "@tensorflow/tfjs";
 import * as facemesh from "@tensorflow-models/face-landmarks-detection";
 import Webcam from "react-webcam";
-import '../Containers/index.css';
 import { drawMesh } from "./utilities";
 
-function VoterverifyPage() {
+
+import { Formik, Form, Field, ErrorMessage } from 'formik'
+import { Grid, TextField } from '@material-ui/core'
+import Button from '@material-ui/core/Button';
+import FormControlLabel from '@material-ui/core/FormControlLabel';
+import AlertMessage  from '../Component/notification';
+import Checkbox from '@material-ui/core/Checkbox';
+import SendIcon from '@material-ui/icons/Send';
+
+
+import * as Yup from 'yup'
+import userApi from '../Api/userApi'
+import '../Containers/index.css';
+import '../Containers/var.css';
+
+function VoterverifyPage(props) {
   const videoConstraints = {
-    width: 640,
-    height: 480,
+    width: 480,
+    height: 360,
     facingMode: "user"
   };
 
@@ -27,7 +41,7 @@ function VoterverifyPage() {
     }, 100);
   };
 
-  
+
 
   const detect = async (net) => {
     if (
@@ -75,59 +89,143 @@ function VoterverifyPage() {
 
   };
 
+//form functions
 
+const initialValues = {
+  Username: '',
+  Password: '',
+  remember: false
+
+}
+
+
+const [isLoading, setLoading] = React.useState(false)
+const [loginStatus, setLoginStatus] = React.useState("")
+const onSubmit = (values) => {
+  console.log(values)
+  setLoading(true)
+  userApi.login(values).then(
+      res => {
+          console.log(res.data)
+          setLoading(false);
+          props.history.push("/")
+      }
+  ).catch(err => {
+      // console.log(err.response.data.message)
+      setLoading(false);
+      return setLoginStatus({ msg: err.response.data.message, key: Math.random(), status:"error"})
+      // console.log(err)
+
+  })
+  console.log(props)
+}
+
+//validations
+const validationSchema = Yup.object().shape({
+  Username: Yup.string().email('Plese enter valid uername').required("Required"),
+  VoterID: Yup.string()
+      .required('No password provided!')
+      .min(8, 'Password is too short - should be 8 chars minimum.')
+      .matches(/[a-zA-Z0-9]/, 'Password can only contain Latin letters.')
+})
 
 
   return (
+    <div>
+    <Formik initialValues={initialValues} onSubmit={onSubmit} validationSchema={validationSchema}>
+      {(props) => (
+      <Form className="voterid">
+        <Grid className="username">
+          <Field as={TextField} id="outlined-user" name="Username"
+            label="Username" variant="outlined" fullWidth required
+            helperText={<ErrorMessage name="Username" />} />
+        </Grid>
+
+        <Grid className="VoterIDNumber">
+          <Field as={TextField} id="outlined-pass" type="VoterID" name="VoterID"
+            label="VoterID" variant="outlined" fullWidth required
+            helperText={<ErrorMessage name="VoterID" />} />
+        </Grid>
+
+        <Field as={FormControlLabel}
+          name="Terms and Conditions"
+          control={
+            <Checkbox color="primary" />
+          }
+          label="Terms and Conditions" />
+
+        <Grid className="button">
+          <Button type='submit' variant="contained" color="primary" fullWidth endIcon={<SendIcon />} >
+            {isLoading ? "Loading..." : "Register"}
+          </Button>
+          {loginStatus ? <AlertMessage key={loginStatus.key} message={loginStatus.msg} status={loginStatus.status} /> : null}
+
+        </Grid>
+      </Form>
+      )}
+    </Formik>
+
     <div className="VoterverifyPage">
       <header className="VoterverifyPage-header">
         {image === '' ? <Webcam audio={false} ref={webcamRef} videoConstraints={videoConstraints} screenshotFormat="image/jpeg"
           style={
             {
               position: "absolute",
-              marginleft: "auto",
+              margin: "auto",
+              textAlign: "center",
               display: "flex",
-              marginright: "auto",
-              left: 0,
+              justifyContent: "center",
+              top: 0,
               right: 0,
-              textAlign: "centr",
-              zIndex: 9,
-              width: 640,
-              height: 480,
+              width: 480,
+              height: 360,
+
             }
           }
-        /> : <img src={image} alt="user" />}
+        /> : <img src={image} alt="user"
+          style={
+            {
+              position: "absolute",
+              margin: "auto",
+              textAlign: "center",
+              display: "flex",
+              justifyContent: "center",
+              top: 0,
+              right: 0,
+              width: 480,
+              height: 360,
+            }} />}
         <canvas ref={canvasRef}
           style={
             {
               position: "absolute",
+              margin: "auto",
+              textAlign: "center",
               display: "flex",
-              marginleft: "auto",
-              marginright: "auto",
-              left: 0,
+              justifyContent: "center",
+              top: 0,
               right: 0,
-              textAlign: "centr",
-              zIndex: 9,
-              width: 640,
-              height: 480,
+              width: 480,
+              height: 360,
             }}
         />
       </header>
-      <div>
-        {image !== '' ?
-          <button onClick={(e) => {
-            e.preventDefault();
-            setImage('')
-          }}
-            className="webcam-btn">
-            Retake Image</button> :
-          <button onClick={(e) => {
-            e.preventDefault();
-            showImage();
-          }}
-            className="webcam-btn1">Capture</button>
-        }
-      </div>
+
+      {image !== '' ?
+        <button onClick={(e) => {
+          e.preventDefault();
+          setImage('')
+        }}
+          className="webcam-btn">
+          Retake Image</button> :
+        <button onClick={(e) => {
+          e.preventDefault();
+          showImage();
+        }}
+          className="webcam-btn">Capture</button>
+      }
+      
+    </div>
     </div>
   );
 }

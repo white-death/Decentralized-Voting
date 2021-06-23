@@ -14,7 +14,7 @@
    margin-top: 5%;
 }
 
-.button{
+.button{    
     margin: 3.5% 0;
 }
 
@@ -71,16 +71,5 @@
 @media screen  and (max-width: 700px){
   .pap{  height: 100%;
     width: 100%;}
-}
-
-.VoterverifyPage{
-    position: absolute;
-    margin-left: auto;
-    margin-right: auto;
-    padding: 10px 0;
-    left: 0;
-    right: 0;
-    text-align: center;
-    z-index: 9;
 }
 

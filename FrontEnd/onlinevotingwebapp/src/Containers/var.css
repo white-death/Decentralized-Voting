@@ -1,0 +1,45 @@
+
+.webcam-btn{
+    position: absolute;
+    text-align: center;
+    display: flex;
+    margin: auto;
+    justify-content: center;
+    top: 27.5em;
+    left: 15.5em;
+}
+
+
+.VoterverifyPage{
+    width: 480px;
+    position: absolute;
+    margin: auto;
+    display: flex;
+    justify-content: center;
+    inset: 0px;
+
+}
+
+
+
+.voterid{
+    position: relative;
+    text-align: center;
+    margin: auto;
+    justify-content: center;
+    top: 26em;
+    
+}
+
+.MuiAvatar-root.MuiAvatar-circle.MuiAvatar-colorDefault.MuiAvatar-colorDefault {
+    color: #fafafa;
+    background-color: #0a88ea;
+}
+
+.VoterIDNumber{
+   margin-top: 2em;
+}
+
+.button{
+    margin: 3.5% 0;
+}
