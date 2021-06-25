@@ -5,12 +5,18 @@ def addC(name):
     return {"Candidate added Successfully"}
 
 def allInfo():
+    description = [
+        "Representative: Modi",
+        "Respresentative: Shashi"
+    ]
+    print("all info reached")
     count = (contract.functions.getInfo(1).call())
     arr = []
     for x in range(count):        
         id, name, votes = contract.functions.getCandidates(x+1).call()
-        arr.append({ "id":id, "name":name, "votes":votes})
-    
+        arr.append({ "id":id, "name":name, "votes":votes, "description": description[x]})
+
+    print("all info working")
     return arr
 
 def info(y):

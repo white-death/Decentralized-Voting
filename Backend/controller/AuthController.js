@@ -41,7 +41,7 @@ const login = async (req,res,next) => {
     console.log(username,password)
 
 
-    User.findOne({$or: [{email:username},{phone:username}]})
+    User.findOne({email:username})
     .then(user => {
         if (user){
             bcrypt.compare(password,user.password, function(err, result){
@@ -51,6 +51,9 @@ const login = async (req,res,next) => {
                     })
                 }
                 if(result){
+                    console.log("here")
+                    console.log(user)
+                    console.log(user.walletAddress)
                     let token = jwt.sign({name:user.name},'verySecretValue', {expiresIn:'1h'})
                     res.json({
                         message: 'Login Successful',
@@ -76,17 +79,20 @@ const login = async (req,res,next) => {
 const verifyVoter = async (req,res,next) => {
         let email = req.body.email;
         let voterID = req.body.voterId;
-
+       
+        
         const filter = {email:email};
         const updateVal = {voterID: voterID}
 
-        User.findOneAndUpdate(filter,updateVal).then(res=> {
-            console.log(res)
-            if(res!==null){
+        User.findOneAndUpdate(filter,updateVal).then(resp=> {
+            console.log(resp)
+            if(resp!==null){
                 res.status(200).json({
                     message: `voter id ${voterID} registered`
                 })
-            }
+            }else res.status(404).json({
+                "message": "no email or voterID given in the request"
+            })
         }).catch(err=> {
             console.log(err)
             res.status(404).json({

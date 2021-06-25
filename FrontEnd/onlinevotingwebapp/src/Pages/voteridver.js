@@ -4,23 +4,25 @@ import * as tf from "@tensorflow/tfjs";
 import * as facemesh from "@tensorflow-models/face-landmarks-detection";
 import Webcam from "react-webcam";
 import { drawMesh } from "./utilities";
+import { withRouter } from 'react-router-dom';
 
 
 import { Formik, Form, Field, ErrorMessage } from 'formik'
 import { Grid, TextField } from '@material-ui/core'
 import Button from '@material-ui/core/Button';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
-import AlertMessage  from '../Component/notification';
+import AlertMessage from '../Component/notification';
 import Checkbox from '@material-ui/core/Checkbox';
 import SendIcon from '@material-ui/icons/Send';
 
 
 import * as Yup from 'yup'
 import userApi from '../Api/userApi'
+import blockchainApi from '../Api/blockChainApis'
 import '../Containers/index.css';
 import '../Containers/var.css';
 
-function VoterverifyPage(props) {
+const VoterverifyPage = (props) => {
   const videoConstraints = {
     width: 480,
     height: 360,
@@ -31,8 +33,6 @@ function VoterverifyPage(props) {
   const webcamRef = useRef(null);
   const canvasRef = useRef(null);
 
-
-
   //  Load posenet
   const runFacemesh = async () => {
     const net = await facemesh.load(facemesh.SupportedPackages.mediapipeFacemesh);
@@ -40,8 +40,6 @@ function VoterverifyPage(props) {
       detect(net);
     }, 100);
   };
-
-
 
   const detect = async (net) => {
     if (
@@ -89,147 +87,163 @@ function VoterverifyPage(props) {
 
   };
 
-//form functions
+  //form functions
 
-const initialValues = {
-  Username: '',
-  Password: '',
-  remember: false
+  const initialValues = {
+    Username: '',
+    VoterID: '',
+    remember: false
 
-}
+  }
 
 
-const [isLoading, setLoading] = React.useState(false)
-const [loginStatus, setLoginStatus] = React.useState("")
-const onSubmit = (values) => {
-  console.log(values)
-  setLoading(true)
-  userApi.login(values).then(
+  const [isLoading, setLoading] = React.useState(false)
+  const [loginStatus, setLoginStatus] = React.useState("")
+
+  const onSubmit = (values) => {
+    let email = values.Username;
+    let voterId = values.VoterID;
+    console.log(values)
+    setLoading(true)
+    userApi.addVoterId({
+      email: email,
+      voterId : voterId
+    }).then(
       res => {
+        console.log(res.data);
+        blockchainApi.getAddressAgainstId(voterId).then(res => {
           console.log(res.data)
           setLoading(false);
-          props.history.push("/")
+          setLoginStatus({ msg: "Voter id registered", key: Math.random(), status: "success" });
+          setTimeout(()=>
+                    props.history.push('/')
+                ,3000)
+        }).catch(err => {
+          setLoading(false);
+          if(err.response !== undefined){
+          return setLoginStatus({ msg: err.response.data.message, key: Math.random(), status: "error" })
+        }
+        else{
+          return setLoginStatus({ msg: "unexpected error occured", key: Math.random(), status:"error"})
+}})
       }
-  ).catch(err => {
+    ).catch(err => {
       // console.log(err.response.data.message)
       setLoading(false);
-      return setLoginStatus({ msg: err.response.data.message, key: Math.random(), status:"error"})
+      return setLoginStatus({ msg: err.response.data.message, key: Math.random(), status: "error" })
       // console.log(err)
 
-  })
-  console.log(props)
-}
+    })
+    console.log(props)
+  }
 
-//validations
-const validationSchema = Yup.object().shape({
-  Username: Yup.string().email('Plese enter valid uername').required("Required"),
-  VoterID: Yup.string()
+  //validations
+  const validationSchema = Yup.object().shape({
+    Username: Yup.string().email('Plese enter valid uername').required("Required"),
+    VoterID: Yup.string()
       .required('No password provided!')
       .min(8, 'Password is too short - should be 8 chars minimum.')
       .matches(/[a-zA-Z0-9]/, 'Password can only contain Latin letters.')
-})
+  })
 
 
   return (
-    <div>
-    <Formik initialValues={initialValues} onSubmit={onSubmit} validationSchema={validationSchema}>
-      {(props) => (
-      <Form className="voterid">
-        <Grid className="username">
-          <Field as={TextField} id="outlined-user" name="Username"
-            label="Username" variant="outlined" fullWidth required
-            helperText={<ErrorMessage name="Username" />} />
-        </Grid>
-
-        <Grid className="VoterIDNumber">
-          <Field as={TextField} id="outlined-pass" type="VoterID" name="VoterID"
-            label="VoterID" variant="outlined" fullWidth required
-            helperText={<ErrorMessage name="VoterID" />} />
-        </Grid>
-
-        <Field as={FormControlLabel}
-          name="Terms and Conditions"
-          control={
-            <Checkbox color="primary" />
-          }
-          label="Terms and Conditions" />
-
-        <Grid className="button">
-          <Button type='submit' variant="contained" color="primary" fullWidth endIcon={<SendIcon />} >
-            {isLoading ? "Loading..." : "Register"}
-          </Button>
-          {loginStatus ? <AlertMessage key={loginStatus.key} message={loginStatus.msg} status={loginStatus.status} /> : null}
-
-        </Grid>
-      </Form>
-      )}
-    </Formik>
-
     <div className="VoterverifyPage">
-      <header className="VoterverifyPage-header">
-        {image === '' ? <Webcam audio={false} ref={webcamRef} videoConstraints={videoConstraints} screenshotFormat="image/jpeg"
-          style={
-            {
-              position: "absolute",
-              margin: "auto",
-              textAlign: "center",
-              display: "flex",
-              justifyContent: "center",
-              top: 0,
-              right: 0,
-              width: 480,
-              height: 360,
-
+      <h1 className="Varhead"> Identity Verification</h1>
+        <header className="VoterverifyPage-header">
+          {image === '' ? <Webcam audio={false} ref={webcamRef} videoConstraints={videoConstraints}
+            style={
+              {
+                position: "absolute",
+                marginLeft: "auto",
+                marginRight: "auto",
+                left: 0,
+                right: 0,
+                textAlign: "center",
+                zindex: 9,
+              
+              }
             }
-          }
-        /> : <img src={image} alt="user"
-          style={
-            {
-              position: "absolute",
-              margin: "auto",
-              textAlign: "center",
-              display: "flex",
-              justifyContent: "center",
-              top: 0,
-              right: 0,
-              width: 480,
-              height: 360,
-            }} />}
-        <canvas ref={canvasRef}
-          style={
-            {
-              position: "absolute",
-              margin: "auto",
-              textAlign: "center",
-              display: "flex",
-              justifyContent: "center",
-              top: 0,
-              right: 0,
-              width: 480,
-              height: 360,
-            }}
-        />
-      </header>
+          /> : <img src={image} alt="user"
+            style={
+              {
+                position: "absolute",
+                marginLeft: "auto",
+                marginRight: "auto",
+                left: 0,
+                right: 0,
+                textAlign: "center",
+                zindex: 9,
+                
+               
+              }} />}
+          <canvas ref={canvasRef}
+            style={
+              {
+                position: "absolute",
+                marginLeft: "auto",
+                marginRight: "auto",
+                left: 0,
+                right: 0,
+                textAlign: "center",
+                zindex: 9,
+                
+             
+              }}
+          />
+        </header>
 
-      {image !== '' ?
-        <button onClick={(e) => {
-          e.preventDefault();
-          setImage('')
-        }}
-          className="webcam-btn">
-          Retake Image</button> :
-        <button onClick={(e) => {
-          e.preventDefault();
-          showImage();
-        }}
-          className="webcam-btn">Capture</button>
-      }
-      
-    </div>
+        {image !== '' ?
+          <button onClick={(e) => {
+            e.preventDefault();
+            setImage('')
+          }}
+            className="webcam-btn">
+            Retake Image</button> :
+          <button onClick={(e) => {
+            e.preventDefault();
+            showImage();
+          }}
+            className="webcam-btn">Capture</button>
+        }
+
+      <Formik initialValues={initialValues} onSubmit={onSubmit} validationSchema={validationSchema}>
+        {(props) => (
+          <Form>
+          <Form className="voterid" >
+            <Grid className="username">
+              <Field as={TextField} id="outlined-user" name="Username"
+                label="Username" variant="outlined" fullWidth required
+                helperText={<ErrorMessage name="Username" />} />
+            </Grid>
+
+            <Grid className="VoterIDNumber">
+              <Field as={TextField} id="outlined-pass" type="VoterID" name="VoterID"
+                label="VoterID" variant="outlined" fullWidth required
+                helperText={<ErrorMessage name="VoterID" />} />
+            </Grid>
+
+            <Field as={FormControlLabel}
+              name="Terms and Conditions"
+              control={
+                <Checkbox color="primary" />
+              }
+              label="Terms and Conditions" />
+          </Form>
+          <div className="buttonver">
+                <Button type="submit" variant="contained" color="primary" fullWidth endIcon={<SendIcon />} >
+                  {isLoading ? "Loading..." : "Register"}
+                </Button>
+          </div>
+                {loginStatus ? <AlertMessage key={loginStatus.key} message={loginStatus.msg} status={loginStatus.status} /> : null}
+                </Form>
+        )}
+      </Formik>
+
     </div>
   );
 }
 
 
-export default VoterverifyPage
+export default withRouter(VoterverifyPage);
 

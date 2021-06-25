@@ -5,8 +5,12 @@ from vote import vote
 from address import adr
 from candidates import allInfo, info, addC
 
-
+from pydantic import BaseModel
 app = FastAPI()
+
+class voteModel(BaseModel):
+   tx_from: str
+   vote_to: int
 
 origins = ["http://localhost:3000"]
 app.add_middleware(
@@ -18,13 +22,18 @@ app.add_middleware(
 )
 
 @app.post("/vote")
-def voting(tx_from: str, vote_to: int):
+def voting(voter: voteModel):
     """
     Gets Transaction Details
 
     Returns:
         [Hash]: [Transaction Generated] and updates the database.
     """
+    print(voter.tx_from,voter.vote_to)
+    tx_from = voter.tx_from
+    vote_to = voter.vote_to
+    print(tx_from,vote_to)
+
     tx_hash, tx_receipt, tx_block = vote(tx_from, vote_to)
     print ("last txn : {}".format(tx_hash))
     return {"tx_block":tx_block, "from": tx_from, "to": vote_to, "newHash":tx_hash}

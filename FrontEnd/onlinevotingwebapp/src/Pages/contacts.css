@@ -1,0 +1,195 @@
+
+
+.contact-header{
+    padding:0.6em;
+    background: #3f51b5 ;
+    font-size: 2em;
+    color:white;
+    font-weight: 600;
+    letter-spacing: 2px;
+}
+
+.container{
+    background: #1a1b23  ;
+    padding: 0 10%;
+    text-align: justify;
+    display: flex;
+    flex-direction: column;
+   align-items: center;
+    
+}
+.hero{
+    display:flex;
+    align-items: center;
+    flex-direction: column;
+    margin: 4em;
+    max-width: 65%;
+    text-align: center;
+}
+.hero > h2{
+    font-size:3em;
+    background: #121FCF;
+    background: -webkit-linear-gradient(to right, #121FCF 0%, #CF1512 100%);
+    background: -moz-linear-gradient(to right, #121FCF 0%, #CF1512 100%);
+    background: linear-gradient(to right, #121FCF 0%, #CF1512 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+.hero > p {
+    color:white;
+}
+.easy-fi-box{
+    width: 100%;
+    padding:1em;
+    display: flex;
+    border: 0.2px solid whitesmoke;
+    border-radius: 20px;
+    background: #1a1b23 ;
+    margin: 2em;
+    box-shadow: 0px 2px 24px 0px rgba(0,0,0,0.25);
+    -webkit-box-shadow: 0px 2px 24px 0px rgba(0,0,0,0.25);
+    -moz-box-shadow: 0px 2px 24px 0px rgba(0,0,0,0.25);
+    
+}
+.easy-fi-box .box-header{
+    flex-direction: column;
+    width: 50%;
+    padding: 2em;
+    
+}
+.easy-fi-box .box-header > h2 {
+    font-weight: 800;
+    font-size: 3em;
+    background: #121FCF;
+    background: -webkit-linear-gradient(to right, #121FCF 0%, #CF1512 100%);
+    background: -moz-linear-gradient(to right, #121FCF 0%, #CF1512 100%);
+    background: linear-gradient(to right, #121FCF 0%, #CF1512 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+.easy-fi-box .box-header > p {
+    font-weight: 400;
+    font-size: 1em;
+    color: white;
+    opacity: 0.8;
+}
+.member-content{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-around;
+    flex-wrap: wrap;
+    padding: 1em;
+    margin-bottom: 4em;
+    width: 70%;
+    color: white;
+}
+
+.member-content > h2 {
+    font-size: 3em;
+    font-weight: 600;
+    background: #121FCF;
+    background: -webkit-linear-gradient(to right, #121FCF 0%, #CF1512 100%);
+    background: -moz-linear-gradient(to right, #121FCF 0%, #CF1512 100%);
+    background: linear-gradient(to right, #121FCF 0%, #CF1512 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+.card{
+    margin-top:1em;
+    width: 200px;
+    text-align: center;
+    border-radius: 12px;
+    transition: transform .4s;
+    padding-bottom:1em;
+    font-weight: 600;
+    color: white;
+    box-shadow: 0px 2px 24px 0px rgba(0,0,0,0.25);
+    -webkit-box-shadow: 0px 2px 24px 0px rgba(0,0,0,0.25);
+    -moz-box-shadow: 0px 2px 24px 0px rgba(0,0,0,0.25);
+}
+.card > h3 {
+    padding:0.53em;
+    background: #121FCF;
+    background: -webkit-linear-gradient(to right, #121FCF 0%, #CF1512 100%);
+    background: -moz-linear-gradient(to right, #121FCF 0%, #CF1512 100%);
+    background: linear-gradient(to right, #121FCF 0%, #CF1512 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+.card > span {
+    opacity: 0.6;
+    font-size: 0.8em;
+    line-height: 1;
+}
+.college-name{
+    letter-spacing: 2px;
+    line-height: 4;
+    font-size: 0.4em;
+}
+.card:hover{
+    transform: scale(1.1);
+    box-shadow: 0px 2px 24px 0px rgba(0,0,0,0.25);
+    -webkit-box-shadow: 0px 2px 24px 0px rgba(0,0,0,0.25);
+    -moz-box-shadow: 0px 2px 24px 0px rgba(0,0,0,0.25);
+
+}
+.image{
+    width: 100%;
+}
+
+.team-members-card{
+    display: flex;
+    justify-content: space-around;
+    width: 100%;
+}
+.infographics-section{
+    display: flex;
+    justify-content: space-evenly;
+    flex-wrap: wrap;
+    align-items: center;
+    
+}
+
+.infographics{
+    background-color: #0abcf9;
+    background-image: linear-gradient(315deg, #0abcf9 0%, #2c69d1 74%);
+    width:250px; 
+    border-radius: 8px;
+    padding:1em 1em;
+    margin:1em;
+    height: 150px;
+    color:white;
+    text-align: left;
+    box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
+    transition: myAnimation 1s ease-in-out ;
+}
+.infographics > h3{
+    font-size: 1em;
+    color: white;
+    
+}
+.infographics:hover{
+    box-shadow: 0px 2px 24px 0px rgba(0,0,0,0.55);
+-webkit-box-shadow: 0px 2px 24px 0px rgba(0,0,0,0.55);
+-moz-box-shadow: 0px 2px 24px 0px rgba(0,0,0,0.55);
+transform: scale(1.1);
+    animation: myAnimation 0.5s ease-in-out;
+}
+
+.infographics  > .icon{
+    font-size:2em;
+}
+
+@keyframes myAnimation {
+    0% {
+        box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
+        transform: scale(1);
+    }
+    100% {
+        box-shadow: 0px 2px 24px 0px rgba(0,0,0,0.55);
+        -webkit-box-shadow: 0px 2px 24px 0px rgba(0,0,0,0.55);
+        -moz-box-shadow: 0px 2px 24px 0px rgba(0,0,0,0.55);
+        transform: scale(1.1);
+    }
+  }

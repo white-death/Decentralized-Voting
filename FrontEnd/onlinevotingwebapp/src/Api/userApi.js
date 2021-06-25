@@ -1,4 +1,4 @@
-import axiosInstance from './Index'
+import {axiosInstance } from './Index'
 
 
 
@@ -13,6 +13,17 @@ const userApi = {
         url: '/api/register',
         data: data
       }),
+      addVoterId:(data) => axiosInstance({
+        method: 'post',
+        url: '/api/verify',
+        data: data
+      }),
+      getAddressAgainstVoterId:(data) => axiosInstance({
+        method: 'post',
+        url: '/api/verify',
+        data: data
+      }),
+      
     }
 
 export default userApi;

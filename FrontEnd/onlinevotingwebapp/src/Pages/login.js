@@ -8,6 +8,7 @@ import SendIcon from '@material-ui/icons/Send';
 import Checkbox from '@material-ui/core/Checkbox';
 import { Formik, Form, Field, ErrorMessage } from 'formik'
 import AlertMessage  from '../Component/notification';
+import storage from '../Controller/localStorageController';
 
 import * as Yup from 'yup'
 import userApi from '../Api/userApi'
@@ -33,20 +34,33 @@ const LoginPage = (props) => {
             res => {
                 console.log(res.data)
                 setLoading(false);
-                props.history.push("/")
+                storage.setVal({
+                    'title': 'name',
+                    'val'   : res.data.user.name
+                })
+                if(res.data.user.walletAddress){
+
+                    storage.setVal({
+                        'title': 'walletAddress',
+                        'val'   : res.data.user.walletAddress
+                    })
+                }
+                props.history.push("/homepage")
             }
         ).catch(err => {
-            // console.log(err.response.data.message)
+            console.log(err.response)
             setLoading(false);
-            return setLoginStatus({ msg: err.response.data.message, key: Math.random(), status:"error"})
+            if(err.response !== undefined){
+
+                return setLoginStatus({ msg: err.response.data.message, key: Math.random(), status:"error"})
+            }else{
+                return setLoginStatus({ msg: "unexpected error occured", key: Math.random(), status:"error"})
+
+            }
             // console.log(err)
 
         }
         )
-        // setTimeout(() => {
-        //     props.resetForm()
-        //     props.setSubmitting(false)
-        // }, 1500)
         console.log(props)
     }
 

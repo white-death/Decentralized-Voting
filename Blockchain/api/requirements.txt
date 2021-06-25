@@ -3,5 +3,3 @@ uvicorn
 web3
 pymongo
 pymongo[srv]
-npm
-ganache-cli

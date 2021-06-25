@@ -32,7 +32,7 @@ const SignupPage = (props) => {
             res => {
                 console.log(res.data)
                 setLoading(false);
-                props.history.push("/")
+                props.history.push("/homepage")
             }
         ).catch(err => {
             setLoading(false);

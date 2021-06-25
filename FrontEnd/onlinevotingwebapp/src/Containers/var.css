@@ -1,34 +1,30 @@
 
 .webcam-btn{
-    position: absolute;
-    text-align: center;
-    display: flex;
-    margin: auto;
-    justify-content: center;
-    top: 27.5em;
-    left: 15.5em;
+   position: relative;
+   justify-content: center;
+   margin-left: auto;
+   margin-right: auto;
+   top: 30em;
+   width: 10%;
+   transform: translate(450%,-10%);
 }
-
-
-.VoterverifyPage{
-    width: 480px;
-    position: absolute;
-    margin: auto;
-    display: flex;
-    justify-content: center;
-    inset: 0px;
-
-}
-
-
 
 .voterid{
     position: relative;
     text-align: center;
     margin: auto;
     justify-content: center;
-    top: 26em;
+    top: 29em;
+    width: 50%;
     
+}
+
+.buttonver{
+    position: relative;
+    margin: auto;
+    justify-content: center;
+    top: 30em;
+    width: 50%;
 }
 
 .MuiAvatar-root.MuiAvatar-circle.MuiAvatar-colorDefault.MuiAvatar-colorDefault {
@@ -40,6 +36,9 @@
    margin-top: 2em;
 }
 
-.button{
-    margin: 3.5% 0;
+.Varhead{
+    padding: 2px;
+    display: flex;
+    justify-content: center;
+    color: rgba(44, 44, 231, 0.788);
 }
